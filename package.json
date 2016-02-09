@@ -1,0 +1,13 @@
+{
+  "name": "todolist",
+  "version": "0.0.1",
+  "description": "A dynamic to do list",
+  "main": "index.js",
+  "author": "Alexandre Lavenant",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "express": "^4.13.3",
+    "nedb": "^1.5.1"
+  }
+}

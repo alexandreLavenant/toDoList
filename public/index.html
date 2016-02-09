@@ -1,0 +1,121 @@
+<!-- index.html -->
+<!doctype html>
+
+<!-- ASSIGN OUR ANGULAR MODULE -->
+<html ng-app="todoApp">
+<head>
+	<!-- META -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
+
+	<title>TODO App</title>
+
+	<!-- load bootstrap -->
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link rel="stylesheet" href="core.css" charset="utf-8">
+</head>
+<!-- SET THE CONTROLLER AND GET ALL TODOS -->
+<body ng-controller="todoController">
+	<div class="container-fluid">
+
+		<!-- TODO LIST -->
+		<div id="content" class="row">
+			<div id="sidebar" class="col-sm-3 col-md-2">
+				<form>
+					<div class="form-group">
+						<div class="input-group input-group-sm">
+							<input type="text" class="form-control text-center" placeholder="ex:projects" size="18" ng-model="newToDo.name">
+							<span class="input-group-btn">
+								<button class="btn btn-success" ng-click="createTodoList()" type="submit">
+									<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New
+								</button>
+							</span>
+						</div>
+					</div>
+				</form>
+				<div id="list-todos" class="list-group">
+					<a href="#" class="list-group-item" ng-class="{ active : todo._id === selectedToDo._id }" ng-repeat="todo in todos | orderBy : 'name'" ng-click="selectToDo(todo)">
+						<label title="delete" class="btn btn-sm" ng-click="showDeleteModal(todo)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></label>
+						{{ todo.name }}
+						<span class="badge">{{ todo.list.length }}</span>
+					</a>
+				</div>
+			</div>
+
+			<div id="main" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2">
+				<!-- HEADER AND TODO COUNT -->
+				<div id="todoTitle" class="jumbotron text-center">
+					<h1>{{ selectedToDo.name }}</h1>
+					<h2><span class="label label-info">{{ remaining() }}</span> of
+						<span class="label label-success">{{ selectedToDo.list.length }}</span> remaining
+						[ <a href="#" title="remove todos" ng-click="removeTodos(selectedToDo._id); $event.preventDefault();">archive</a> ]
+					</h2>
+				</div>
+
+				<!-- LOOP OVER THE TODOS IN $scope.todos -->
+				<div class="list-group">
+					<a href="#" class="list-group-item" draggable="true" ng-repeat="todo in selectedToDo.list | orderBy : 'pos'"  ng-click="todo.done = ! todo.done; $event.preventDefault();"  ng-mouseenter="todo.edit=true" ng-mouseleave="todo.edit=false">
+						<input type="checkbox" ng-checked="todo.done">
+						<span class="done-{{ todo.done }}">{{ todo.text }}</span>
+						<button type="button" title="edit" class="btn btn-primary btn-sm pull-right" ng-click="showEditModal(todo); $event.stopPropagation();" ng-show="todo.edit">
+							<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+						</button>
+					</a>
+				</div>
+				<div class="form">
+					<form class="form-inline">
+						<div class="form-group">
+							<input type="text" class="form-control input-lg text-center" placeholder="go skying" ng-model="todo.text">
+							<button type="submit" class="btn btn-success btn-lg" ng-click="addTodo(selectedToDo._id)">Add</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- MODAL -->
+	<div id="modal-edit" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">Edit todo</h4>
+				</div>
+				<div class="modal-body">
+					<div class="input-group">
+						<input type="text" class="form-control" ng-model="editTodo.text">
+						<span class="input-group-btn">
+							<button class="btn btn-primary" type="button" ng-click="edit(selectedToDo._id, editTodo)">Edit</button>
+						</span>
+					</div><!-- /input-group -->
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+	<div id="modal-delete" class="modal fade" tabindex="-1" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">Delete a todo list</h4>
+				</div>
+				<div class="modal-body">
+					<p>Do you really want to delete the todo list: <strong>{{ selectedToDo.name }}</strong> ?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-success" ng-click="deleteTodoList(selectedToDo._id)">Yes</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
+	<!-- SPELLS -->
+	<script src="//code.jquery.com/jquery-2.1.4.min.js"></script><!-- load jquery -->
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script><!-- load angular -->
+	<script src="index.js"></script>
+</body>
+</html>

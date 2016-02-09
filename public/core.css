@@ -1,0 +1,31 @@
+#sidebar{
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    z-index: 1000;
+    display: block;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-right: 1px solid #EEE;
+    background-color: #737373;
+}
+
+#list-todos{
+    margin-top: 10px;
+}
+
+.badge{
+    background-color: #286090;
+    border-color: #204D74;
+}
+
+.done-true {
+  text-decoration: line-through;
+  color: grey;
+}
+
+#todoTitle{
+    margin-top: 10px;
+}
